@@ -1,0 +1,43 @@
+services:
+  webapp:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: animals_db
+      MYSQL_ROOT_PASSWORD: password
+    depends_on:
+      - database
+    volumes:
+      - ./database:/app/database
+
+  database:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: animals_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  # Add the new test service
+  test:
+    build: .
+    depends_on:
+      - webapp
+    environment:
+      API_URL: http://webapp:3000    # Use the webapp service name as the hostname
+    command: yarn test              # Run the tests using Mocha
+    working_dir: /app
+    networks:
+      - default
+
+volumes:
+  mysql_data:
