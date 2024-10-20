@@ -6,12 +6,11 @@ export default [
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
-    },
-    env: {
-      es6: true,
-      es2021: true,
-      node: true,
-      mocha: true,
+      globals: {
+        es6: true,
+        node: true,
+        mocha: true,
+      },
     },
     rules: {
       indent: ['error', 2, { SwitchCase: 1 }],
